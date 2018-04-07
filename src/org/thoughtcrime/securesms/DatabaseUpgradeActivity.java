@@ -76,6 +76,7 @@ public class DatabaseUpgradeActivity extends BaseActivity {
   public static final int PERSISTENT_BLOBS                     = 317;
   public static final int INTERNALIZE_CONTACTS                 = 317;
   public static final int SQLCIPHER                            = 334;
+  public static final int FULL_TEXT_SEARCH                     = 352; // TODO: Use correct version!
 
   private static final SortedSet<Integer> UPGRADE_VERSIONS = new TreeSet<Integer>() {{
     add(NO_MORE_KEY_EXCHANGE_PREFIX_VERSION);
@@ -94,6 +95,7 @@ public class DatabaseUpgradeActivity extends BaseActivity {
     add(INTERNALIZE_CONTACTS);
     add(PERSISTENT_BLOBS);
     add(SQLCIPHER);
+    add(FULL_TEXT_SEARCH);
   }};
 
   private MasterSecret masterSecret;
