@@ -75,18 +75,19 @@ public class MmsSmsDatabase extends Database {
     return queryTables(PROJECTION, MmsSmsColumns.NORMALIZED_DATE_SENT + " = " + timestamp, null, null);
   }
 
-  public Cursor getConversation(long threadId, long limit) {
+  public Cursor getConversation(long threadId, long offset, long limit) {
     String order     = MmsSmsColumns.NORMALIZED_DATE_RECEIVED + " DESC";
     String selection = MmsSmsColumns.THREAD_ID + " = " + threadId;
+    String limitStr  = limit > 0 || offset > 0 ? offset + ", " + limit : null;
 
-    Cursor cursor = queryTables(PROJECTION, selection, order, limit > 0 ? String.valueOf(limit) : null);
+    Cursor cursor = queryTables(PROJECTION, selection, order, limitStr);
     setNotifyConverationListeners(cursor, threadId);
 
     return cursor;
   }
 
   public Cursor getConversation(long threadId) {
-    return getConversation(threadId, 0);
+    return getConversation(threadId, 0, 0);
   }
 
   public Cursor getIdentityConflictMessagesForThread(long threadId) {
