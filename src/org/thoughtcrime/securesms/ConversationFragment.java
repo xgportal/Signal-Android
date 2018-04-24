@@ -26,6 +26,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -242,9 +243,7 @@ public class ConversationFragment extends Fragment
 
       menu.findItem(R.id.menu_context_forward).setVisible(!actionMessage);
       menu.findItem(R.id.menu_context_details).setVisible(!actionMessage);
-      menu.findItem(R.id.menu_context_reply).setVisible(!messageRecord.isPending() &&
-                                                        !messageRecord.isFailed()  &&
-                                                        messageRecord.isSecure());
+      menu.findItem(R.id.menu_context_reply).setVisible(canReplyTo(messageRecord));
     }
     menu.findItem(R.id.menu_context_copy).setVisible(!actionMessage && hasText);
   }
@@ -499,9 +498,26 @@ public class ConversationFragment extends Fragment
     }
   }
 
+  private void updateQuickReply() {
+    if (getListAdapter().getSelectedItems().size() == 1) {
+      MessageRecord selectedMesage = getSelectedMessageRecord();
+      listener.setQuickReply(canReplyTo(selectedMesage) ? selectedMesage : null);
+    } else {
+      listener.setQuickReply(null);
+    }
+  }
+
+  private boolean canReplyTo(@NonNull MessageRecord messageRecord) {
+    return !messageRecord.isPending() &&
+        !messageRecord.isFailed()  &&
+        messageRecord.isSecure();
+  }
+
+
   public interface ConversationFragmentListener {
     void setThreadId(long threadId);
     void handleReplyMessage(MessageRecord messageRecord);
+    void setQuickReply(@Nullable MessageRecord messageRecord);
   }
 
   private class ConversationScrollListener extends OnScrollListener {
@@ -597,6 +613,7 @@ public class ConversationFragment extends Fragment
           setCorrectMenuVisibility(actionMode.getMenu());
           actionMode.setTitle(String.valueOf(getListAdapter().getSelectedItems().size()));
         }
+        updateQuickReply();
       }
     }
 
@@ -660,6 +677,7 @@ public class ConversationFragment extends Fragment
       }
 
       setCorrectMenuVisibility(menu);
+      updateQuickReply();
       return true;
     }
 
@@ -677,6 +695,7 @@ public class ConversationFragment extends Fragment
         getActivity().getWindow().setStatusBarColor(statusBarColor);
       }
 
+      updateQuickReply();
       actionMode = null;
     }
 
