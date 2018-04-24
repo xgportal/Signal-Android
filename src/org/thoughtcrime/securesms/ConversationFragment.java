@@ -492,6 +492,13 @@ public class ConversationFragment extends Fragment
     }
   }
 
+  public void exitMultiSelect() {
+    getListAdapter().clearSelection();
+    if (actionMode != null) {
+      actionMode.finish();
+    }
+  }
+
   private void scrollToLastSeenPosition(final int lastSeenPosition) {
     if (lastSeenPosition > 0) {
       list.post(() -> ((LinearLayoutManager)list.getLayoutManager()).scrollToPositionWithOffset(lastSeenPosition, list.getHeight()));
@@ -509,8 +516,8 @@ public class ConversationFragment extends Fragment
 
   private boolean canReplyTo(@NonNull MessageRecord messageRecord) {
     return !messageRecord.isPending() &&
-        !messageRecord.isFailed()  &&
-        messageRecord.isSecure();
+           !messageRecord.isFailed()  &&
+           messageRecord.isSecure();
   }
 
 

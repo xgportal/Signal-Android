@@ -2116,6 +2116,7 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
     public void afterTextChanged(Editable s) {
       if (messageRecord != null) {
         handleReplyMessage(messageRecord);
+        fragment.exitMultiSelect();
       }
     }
   }
